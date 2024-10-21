@@ -948,7 +948,7 @@
       <li><a href="#" target="_blank">Linkedin <i
         class="bi bi-linkedin" style="color: #0077B5;"></i></a></li>
         <li><a href="#" target="_blank">Twitter    <i class="bi bi-twitter" style="color: #1DA1F2;"></i> </a></li>
-      <li><a href="tel:6381476847" target="_blank">Call Us <i class="bi bi-phone" style="color: #333;"></i></a></li>
+      <li><a href="tel:9894650843" target="_blank">Call Us <i class="bi bi-phone" style="color: #333;"></i></a></li>
         </ul>
 </nav>
 <!-- new social media links design ends  -->
@@ -974,37 +974,5 @@
         src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
 </script>
     </body>
-    <script>
-        // subcribe
-        (function(){
-            emailjs.init("Ve8FD2LCix8CyWxcE"); 
-        })();
-    
-        document.getElementById('subscribeForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-    
-            const email = document.getElementById('email').value;
-            const button = e.target.querySelector('button');
-            
-            button.disabled = true; 
-            button.textContent = 'Sending...';
-    
-            emailjs.send('service_w90reyh', 'template_u5w479y', { email })
-                .then(function(response) {
-                    const message = document.getElementById('message');
-                    message.textContent = 'Subscription successful!';
-                    message.style.color = 'green';
-                    document.getElementById('subscribeForm').reset();
-                }, function(error) {
-                    const message = document.getElementById('message');
-                    message.textContent = 'Error subscribing. Please try again.';
-                    message.style.color = 'red';
-                    console.error('EmailJS error:', error);
-                })
-                .finally(() => {
-                    button.disabled = false; 
-                    button.textContent = 'Subscribe'; 
-                });
-        });
-    </script>
+
 </html>
