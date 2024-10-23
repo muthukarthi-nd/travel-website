@@ -132,7 +132,10 @@
                                     <button class="btn btn-primary text-white w-100 py-3 btn-warning" type="submit">Book Now</button>
                                 </div>
                             </div>
-                        </form>
+
+                        </form><br>
+                        <div id="messageDisplay" class="alert" style="display:none;"></div>
+
                     </div>
                 </div>
             </div>
@@ -219,35 +222,96 @@
     </body>
 
     <script>
-//    booking
+        
         emailjs.init('Ve8FD2LCix8CyWxcE'); 
     
+    
+        function setMessage(message, isError = false) {
+            const messageDisplay = document.getElementById("messageDisplay");
+            messageDisplay.textContent = message;
+            messageDisplay.style.display = "block";
+            messageDisplay.className = isError ? "alert alert-danger" : "alert alert-success"; // Bootstrap classes for styling
+        }
+    
+
         document.getElementById("bookingForm").onsubmit = function(event) {
             event.preventDefault();
+    
+           
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const datetime = document.getElementById('datetime').value;
+            const persons = document.getElementById('Persons').value.trim();
+            const destination = document.getElementById('Destination').value.trim();
+            const message = document.getElementById('message').value.trim();
+    
+           
+            if (!name) {
+                setMessage('Please enter your name.', true);
+                return;
+            }
+            if (!email) {
+                setMessage('Please enter your email.', true);
+                return;
+            }
+            if (!validateEmail(email)) {
+                setMessage('Please enter a valid email address.', true);
+                return;
+            }
+            if (!datetime) {
+                setMessage('Please select a date and time.', true);
+                return;
+            }
+            if (!isFutureDate(datetime)) {
+                setMessage('Please select a date and time that is in the future.', true);
+                return;
+            }
+            if (!persons || isNaN(persons) || persons <= 0) {
+                setMessage('Please enter a valid number of persons.', true);
+                return;
+            }
+            if (!destination) {
+                setMessage('Please enter a destination.', true);
+                return;
+            }
+    
+           
+            const formData = {
+                name: name,
+                email: email,
+                datetime: datetime,
+                destination: destination,
+                persons: persons,
+                message: message,
+            };
+    
         
             const serviceID = "service_w90reyh"; 
             const templateID = "template_96728nn"; 
-        
-            const formData = {
-                name: document.getElementById("name").value,
-                email: document.getElementById("email").value,
-                datetime: document.getElementById("datetime").value,
-                destination: document.getElementById("select1").value,
-                persons: document.getElementById("SelectPerson").value,
-                category: document.getElementById("CategoriesSelect").value,
-                message: document.getElementById("message").value,
-            };
-        
+    
             emailjs.send(serviceID, templateID, formData)
                 .then(() => {
-                    alert("Email sent successfully!");
+                    setMessage("Submitted successfully!"); 
                     document.getElementById("bookingForm").reset();
                 })
                 .catch((err) => {
-                    alert("Failed to send email. Please try again.");
+                    setMessage("Failed to send email. Please try again.", true); 
                     console.error(err);
                 });
         };
-    </script>
     
+      
+        function validateEmail(email) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+    
+       
+        function isFutureDate(datetime) {
+            const selectedDate = new Date(datetime);
+            const now = new Date();
+            return selectedDate > now;
+        }
+    </script>
+     
 </html>
