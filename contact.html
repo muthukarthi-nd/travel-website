@@ -136,7 +136,8 @@
                                     <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
                                 </div>
                             </div>
-                        </form>
+                        </form><br>
+                        <div id="messageDisplay" class="alert" style="display:none;"></div>
                     </div>
                     <div class="col-12" id="map">
                         <div class="rounded">
@@ -231,35 +232,55 @@
  </script>
     </body>
     
-<script>
-    // contact
-
-    (function(){
-        emailjs.init("Ve8FD2LCix8CyWxcE"); 
-    })();
-
-    document.getElementById("contactForm").addEventListener("submit", function(event) {
-        event.preventDefault()
-        const formData = new FormData(this);
-        const data = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            subject: formData.get('subject'),
-            message: formData.get('message')
-        };
-
-        emailjs.send("service_w90reyh", "template_u5w479y", data)
-            .then(function(response) {
-                console.log("SUCCESS!", response.status, response.text);
-                alert("Message sent successfully!");
-                document.getElementById("contactForm").reset(); 
-                location.reload(); 
-            }, function(error) {
-                console.log("FAILED...", error);
-                alert("Failed to send message. Please try again.");
-            });
-    });
-</script>
+    <script>
+        (function() {
+            emailjs.init("Ve8FD2LCix8CyWxcE"); 
+        })();
+    
+        function setMessage(message, isError = false) {
+            const messageDisplay = document.getElementById("messageDisplay");
+            messageDisplay.textContent = message;
+            messageDisplay.style.display = "block";
+            messageDisplay.className = isError ? "alert alert-danger" : "alert alert-success";
+        }
+    
+        function validateEmail(email) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+    
+        document.getElementById("contactForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+    
+            const formData = new FormData(this);
+            const email = formData.get('email');
+    
+            if (!validateEmail(email)) {
+                setMessage("Please enter a valid email address.", true);
+                return;
+            }
+    
+            const data = {
+                name: formData.get('name'),
+                email: email,
+                subject: formData.get('subject'),
+                message: formData.get('message')
+            };
+    
+            emailjs.send("service_w90reyh", "template_u5w479y", data)
+                .then(function(response) {
+                    console.log("SUCCESS!", response.status, response.text);
+                    setMessage("Message sent successfully!");
+                    document.getElementById("contactForm").reset();
+                })
+                .catch(function(error) {
+                    console.error("FAILED...", error);
+                    setMessage("Failed to send message. Please try again.", true);
+                });
+        });
+    </script>
+    
+    
 
 
 
