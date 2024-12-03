@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /search
+Disallow: /category/
+Disallow: /tag/
+Disallow: /*?m=1
+Allow: /
+Sitemap:https://travelartholidays.in/
